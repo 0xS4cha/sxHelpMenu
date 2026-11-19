@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "@fontsource/barlow-condensed/500.css";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
+
+@theme {
+  --font-help: "Barlow Condensed", system-ui, sans-serif;
+  --color-help-panel: #1b1e2e;
+  --color-help-accent: #3ee6ff;
+  --color-help-danger: #ff5a4f;
+  --color-help-safe: #5ef0a4;
+  --color-help-warning: #ffc94d;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  font-family: system-ui, -apple-system, sans-serif;
+}
