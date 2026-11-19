@@ -71,6 +71,22 @@ end
 
 ROW_TYPES.slider = normalizeLevel
 
+local MAX_KEYS = 6
+
+function ROW_TYPES.keys(row, normalized)
+    local keys = {}
+    for _, item in ipairs(type(row.keys) == 'table' and row.keys or {}) do
+        if type(item) == 'table' and item.key ~= nil then
+            keys[#keys + 1] = {
+                key = tostring(item.key),
+                label = item.label ~= nil and tostring(item.label) or nil,
+            }
+            if #keys >= MAX_KEYS then break end
+        end
+    end
+    normalized.keys = keys
+end
+
 function ROW_TYPES.countdown(row, normalized)
     local endsAt = toNumber(row.endsAt, nil)
     if not endsAt then
