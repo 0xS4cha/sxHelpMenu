@@ -50,6 +50,7 @@ function vehicleMenu(position: Position): MenuData {
           { type: 'text', label: 'Access', value: 'Locked', icon: 'key-round', tone: 'danger' },
           { type: 'text', label: 'Plate', value: '46EEK572' },
           { type: 'bar', label: 'Fuel', value: 0.14, tone: 'danger' },
+          { type: 'countdown', label: 'Impound', remaining: 95000, done: 'Released', doneTone: 'safe' },
         ],
       },
     ],

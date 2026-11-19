@@ -1,5 +1,6 @@
 import type { RowData } from '../../types/menu'
 import { BarRow } from './BarRow'
+import { CountdownRow } from './CountdownRow'
 import { SliderRow } from './SliderRow'
 import { TextRow } from './TextRow'
 
@@ -7,6 +8,8 @@ export function Row({ row, index, last }: { row: RowData; index: number; last?: 
   switch (row.type) {
     case 'bar':
       return <BarRow row={row} index={index} last={last} />
+    case 'countdown':
+      return <CountdownRow row={row} index={index} last={last} />
     case 'slider':
       return <SliderRow row={row} index={index} last={last} />
     default:

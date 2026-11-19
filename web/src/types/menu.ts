@@ -49,7 +49,14 @@ export interface SliderRowData extends BaseRow {
   display?: string
 }
 
-export type RowData = TextRowData | BarRowData | SliderRowData
+export interface CountdownRowData extends BaseRow {
+  type: 'countdown'
+  remaining: number
+  done?: string
+  doneTone?: Tone
+}
+
+export type RowData = TextRowData | BarRowData | SliderRowData | CountdownRowData
 
 export interface FooterItem {
   value: string

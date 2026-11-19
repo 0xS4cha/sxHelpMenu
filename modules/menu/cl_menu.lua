@@ -71,6 +71,18 @@ end
 
 ROW_TYPES.slider = normalizeLevel
 
+function ROW_TYPES.countdown(row, normalized)
+    local endsAt = toNumber(row.endsAt, nil)
+    if not endsAt then
+        endsAt = GetGameTimer() + math.max(toNumber(row.value, 0), 0) * 1000
+        row.endsAt = endsAt
+    end
+
+    normalized.remaining = math.max(0, endsAt - GetGameTimer())
+    normalized.done = row.done ~= nil and tostring(row.done) or nil
+    normalized.doneTone = normalizeTone(row.doneTone)
+end
+
 local function normalizeRow(row)
     if type(row) ~= 'table' then return nil end
 
