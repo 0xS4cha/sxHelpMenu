@@ -74,7 +74,26 @@ export interface ImageRowData extends BaseRow {
   fit: 'cover' | 'contain'
 }
 
-export type RowData = TextRowData | BarRowData | SliderRowData | CountdownRowData | KeysRowData | ImageRowData
+export interface StatItem {
+  label?: string
+  value: string
+  icon?: string
+  tone?: Tone
+}
+
+export interface StatsRowData extends BaseRow {
+  type: 'stats'
+  items: StatItem[]
+}
+
+export type RowData =
+  | TextRowData
+  | BarRowData
+  | SliderRowData
+  | CountdownRowData
+  | KeysRowData
+  | ImageRowData
+  | StatsRowData
 
 export interface FooterItem {
   value: string

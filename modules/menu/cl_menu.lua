@@ -71,6 +71,24 @@ end
 
 ROW_TYPES.slider = normalizeLevel
 
+local MAX_STATS = 4
+
+function ROW_TYPES.stats(row, normalized)
+    local items = {}
+    for _, item in ipairs(type(row.items) == 'table' and row.items or {}) do
+        if type(item) == 'table' then
+            items[#items + 1] = {
+                label = item.label ~= nil and tostring(item.label) or nil,
+                value = item.value ~= nil and tostring(item.value) or '',
+                icon = item.icon,
+                tone = normalizeTone(item.tone),
+            }
+            if #items >= MAX_STATS then break end
+        end
+    end
+    normalized.items = items
+end
+
 local IMAGE_FITS = { cover = true, contain = true }
 
 function ROW_TYPES.image(row, normalized)
