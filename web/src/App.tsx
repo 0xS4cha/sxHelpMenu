@@ -10,6 +10,11 @@ import { isEnvBrowser } from './utils/nui'
 interface SettingsData {
   gap?: number
   glass?: GlassSettings
+  key?: string
+}
+
+interface KeyLabelData {
+  label: string
 }
 
 export default function App() {
@@ -17,6 +22,7 @@ export default function App() {
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const [gap, setGap] = useState(1.2)
   const [glass, setGlass] = useState(false)
+  const [keyLabel, setKeyLabel] = useState('R')
 
   useNuiEvent<MenuData>('setMenu', (menu) => {
     setMenus((current) => {
@@ -47,11 +53,14 @@ export default function App() {
   useNuiEvent<SetFocusData>('setFocus', ({ id }) => setFocusedId(id ?? null))
   useNuiEvent<SettingsData>('setSettings', (data) => {
     if (typeof data.gap === 'number') setGap(data.gap)
+    if (data.key) setKeyLabel(data.key)
     if (data.glass) {
       configureGlass(data.glass)
       setGlass(data.glass.enabled && !isEnvBrowser())
     }
   })
+
+  useNuiEvent<KeyLabelData>('setKeyLabel', ({ label }) => setKeyLabel(label))
 
   useEffect(() => {
     void fetchNui('nuiReady', { ok: true })
@@ -88,6 +97,7 @@ export default function App() {
           focusedId={focusedId}
           gap={gap}
           glass={glass}
+          keyLabel={keyLabel}
         />
       ))}
     </>

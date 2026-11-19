@@ -1,7 +1,7 @@
 import { POSITIONS, type MenuData, type Position } from '../types/menu'
 import { debugData } from './debugData'
 
-const base = { offset: { x: 2.5, y: 6 }, width: 360, scale: 1, key: 'R', page: 0, glass: true }
+const base = { offset: { x: 2.5, y: 6 }, width: 360, scale: 1, key: true, page: 0, glass: true }
 
 function vehicleMenu(position: Position): MenuData {
   return {
@@ -88,6 +88,8 @@ export function runDemo(): void {
   const messages = [{ action: 'setMenu', data: vehicle }]
   if (params.has('stack')) messages.push({ action: 'setMenu', data: hintMenu(position) })
   messages.push({ action: 'setFocus', data: { id: 'vehicle' } } as never)
+  const key = params.get('key')
+  if (key) messages.push({ action: 'setKeyLabel', data: { label: key } } as never)
 
   debugData(messages)
 }

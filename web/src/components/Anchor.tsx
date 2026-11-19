@@ -14,6 +14,7 @@ interface AnchorProps {
   focusedId: string | null
   gap: number
   glass: boolean
+  keyLabel: string
 }
 
 function anchorStyle(position: Position, offset: { x: number; y: number }, gap: number): CSSProperties {
@@ -52,7 +53,7 @@ function anchorStyle(position: Position, offset: { x: number; y: number }, gap: 
   return style
 }
 
-export function Anchor({ position, entries, focusedId, gap, glass }: AnchorProps) {
+export function Anchor({ position, entries, focusedId, gap, glass, keyLabel }: AnchorProps) {
   const sorted = [...entries].sort((a, b) => a.menu.order - b.menu.order)
   const [offset, setOffset] = useState({ x: 2.5, y: 6 })
   const first = sorted[0]?.menu.offset
@@ -68,6 +69,7 @@ export function Anchor({ position, entries, focusedId, gap, glass }: AnchorProps
             direction={direction}
             focused={menu.id === focusedId}
             glass={glass && menu.glass}
+            keyLabel={keyLabel}
           />
         ))}
       </AnimatePresence>

@@ -86,7 +86,7 @@ export interface MenuData {
   scale: number
   header?: HeaderData
   pages: PageData[]
-  key?: string
+  key?: string | boolean
   page: number
   order: number
   glass: boolean
