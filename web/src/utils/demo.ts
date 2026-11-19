@@ -1,6 +1,10 @@
 import { POSITIONS, type MenuData, type Position } from '../types/menu'
 import { debugData } from './debugData'
 
+const DEMO_IMAGE = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6a35c"/><stop offset="1" stop-color="#7a3f8f"/></linearGradient></defs><rect width="360" height="110" fill="url(#s)"/><circle cx="270" cy="70" r="26" fill="#ffd27a"/><path d="M0 110 L60 60 L120 90 L190 40 L260 95 L320 65 L360 85 L360 110 Z" fill="#2b2140"/></svg>',
+)}`
+
 const base = { offset: { x: 2.5, y: 6 }, width: 360, scale: 1, key: true, page: 0, glass: true }
 
 function vehicleMenu(position: Position): MenuData {
@@ -46,6 +50,7 @@ function vehicleMenu(position: Position): MenuData {
         title: 'Info',
         icon: 'user-round',
         rows: [
+          { type: 'image', label: 'Vinewood Hills', src: DEMO_IMAGE, height: 110, fit: 'cover' },
           { type: 'text', label: 'Owner', value: 'Lucas Martin', icon: 'user-round' },
           { type: 'text', label: 'Access', value: 'Locked', icon: 'key-round', tone: 'danger' },
           { type: 'text', label: 'Plate', value: '46EEK572' },

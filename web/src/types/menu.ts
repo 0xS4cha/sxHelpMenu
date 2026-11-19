@@ -67,7 +67,14 @@ export interface KeysRowData extends BaseRow {
   keys: KeyHint[]
 }
 
-export type RowData = TextRowData | BarRowData | SliderRowData | CountdownRowData | KeysRowData
+export interface ImageRowData extends BaseRow {
+  type: 'image'
+  src: string
+  height: number
+  fit: 'cover' | 'contain'
+}
+
+export type RowData = TextRowData | BarRowData | SliderRowData | CountdownRowData | KeysRowData | ImageRowData
 
 export interface FooterItem {
   value: string
