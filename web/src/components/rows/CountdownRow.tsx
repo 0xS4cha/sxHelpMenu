@@ -12,7 +12,7 @@ interface CountdownRowProps {
 }
 
 export function CountdownRow({ row, index, last }: CountdownRowProps) {
-  const left = useCountdown(row.remaining)
+  const left = useCountdown(row.deadline ?? 0)
   const finished = left === 0
   const tone = finished ? (row.doneTone ?? row.tone) : row.tone
   const text = finished && row.done ? row.done : formatDuration(left)

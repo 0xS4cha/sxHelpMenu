@@ -52,6 +52,7 @@ export interface SliderRowData extends BaseRow {
 export interface CountdownRowData extends BaseRow {
   type: 'countdown'
   remaining: number
+  deadline?: number
   done?: string
   doneTone?: Tone
 }
