@@ -55,6 +55,15 @@ None.
 
 The key can be changed in *Settings > Key Bindings > FiveM*.
 
+Keys already used by the game, like `TAB` for the weapon wheel, cannot be bound this way since the game catches them first. Set `Config.Keys.control` to the [control](https://docs.fivem.net/docs/game-references/controls/) of this key instead, the key mapping is then not registered and the control is disabled and read while a menu with several pages is shown:
+
+```lua
+Config.Keys = {
+    nextPage = 'TAB',
+    control = 37,
+}
+```
+
 ### Builder
 
 Add the builder to the `fxmanifest.lua` of your resource:
@@ -216,7 +225,8 @@ Everything lives in `shared/config.lua`.
 
 | Key | Default | Description |
 | --- | --- | --- |
-| `Config.Keys.nextPage` | `'R'` | Default key of the next page |
+| `Config.Keys.nextPage` | `'R'` | Default key of the next page, and label shown on the menus |
+| `Config.Keys.control` | `nil` | Game control used instead of the key mapping, `37` for `TAB`. Disabled while a menu with several pages is shown |
 | `Config.Defaults.position` | `'bottom-right'` | Anchor of the menus without `position` |
 | `Config.Defaults.offset` | `{ x = 2.5, y = 6.0 }` | Offset of the menus without `offset` |
 | `Config.Defaults.width` | `360` | Width of the menus without `width` |
