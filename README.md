@@ -108,6 +108,7 @@ menu:Hide()
 | `page:Text(label, value, options?)` | Adds a text row |
 | `page:Bar(label, value, options?)` | Adds a segmented bar |
 | `page:Slider(label, value, options?)` | Adds a slider |
+| `page:Countdown(label, seconds, options?)` | Adds a countdown, its end is fixed when the row is created |
 | `page:Footer(label, items)` | Footer of the page |
 | `page:Header(subtitle, title, options?)` | Header of this page only |
 | `menu:Show(duration?)` | Shows the menu, or updates it when it is already shown |
@@ -204,16 +205,19 @@ end)
 
 | Field | Rows | Description |
 | --- | --- | --- |
-| `type` | all | `'text'`, `'bar'` or `'slider'` |
+| `type` | all | `'text'`, `'bar'`, `'slider'` or `'countdown'` |
 | `id` | all | Used by `UpdateRow` |
 | `label` | all | Text on the left |
-| `value` | all | Text for `text`, a number between `0` and `max` for `bar` and `slider` |
+| `value` | all | Text for `text`, a number between `0` and `max` for `bar` and `slider`, seconds left for `countdown` |
 | `tone` | all | `neutral`, `danger`, `safe`, `warning`, `accent` or a hex color |
-| `icon` | `text` | Icon in a badge after the value |
+| `icon` | `text`, `countdown` | Icon in a badge after the value, `timer` by default for `countdown` |
 | `scramble` | `text` | `false` disables the scramble animation, useful for values updated often |
 | `max` | `bar`, `slider` | Maximum of `value`, `1` by default |
 | `display` | `bar`, `slider` | Text shown instead of the percentage, or of the value when `max` is set |
 | `segments` | `bar` | Number of segments, `10` by default |
+| `endsAt` | `countdown` | End of the countdown in `GetGameTimer()` milliseconds. Without it, `value` is converted on the first `Show`, set it for menus shown again with the same table |
+| `done` | `countdown` | Text shown at the end instead of `00:00` |
+| `doneTone` | `countdown` | Tone at the end |
 | `thresholds` | `bar`, `slider` | List of `{ value, tone }`, in the unit of `value`. The row takes the tone of the lowest threshold that `value` is under or equal to, otherwise its `tone` |
 
 ```lua
