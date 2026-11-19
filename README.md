@@ -17,6 +17,7 @@ A FiveM library to show help menus and info widgets in the style of Grand Theft 
 - **Auto hide**: a duration after which the menu hides itself.
 - **Per frame**: `ShowThisFrame` shows a menu while it is called every tick and hides it when the calls stop, like the native help texts.
 - **Cleanup**: the menus of a resource are hidden when it stops.
+- **Glass**: the rows are drawn over a blurred copy of the game, rendered with WebGL since the CSS `backdrop-filter` does not see the game in FiveM.
 - **Icons**: every [Lucide](https://lucide.dev/icons) icon by name (`gauge`, `car-front`…) or an image URL (`nui://my_resource/logo.png`).
 - **Builder**: a Lua file to include in your resource with a chainable API, or plain exports.
 
@@ -172,6 +173,7 @@ end)
 | `header` | | `{ subtitle, title, watermark?, image? }` |
 | `pages` | | List of pages. Without pages, `title`, `icon`, `rows` and `footer` of the menu make a single page |
 | `page` | `0` | Page shown first |
+| `glass` | `Config.Defaults.glass` | Blurs the game behind the rows, `false` keeps a plain translucent background |
 | `key` | `Config.Keys.nextPage` | Label of the page key, `false` to hide it and ignore the key |
 | `duration` | | Milliseconds before the menu hides itself |
 | `order` | | Order of the menus on the same anchor, the lowest is the closest to the edge |
@@ -220,6 +222,11 @@ Everything lives in `shared/config.lua`.
 | `Config.Defaults.width` | `360` | Width of the menus without `width` |
 | `Config.Defaults.scale` | `1.0` | Zoom of the menus without `scale` |
 | `Config.Defaults.gap` | `1.2` | Space between the menus on the same anchor, in `vh` |
+| `Config.Defaults.glass` | `true` | Blurs the game behind the rows of the menus without `glass` |
+| `Config.Glass.enabled` | `true` | Turns the glass renderer on for every menu |
+| `Config.Glass.fps` | `60` | Maximum refresh rate of the blur |
+| `Config.Glass.downscale` | `4` | Resolution divider of the blurred image, higher is lighter and softer, from `1` to `8` |
+| `Config.Glass.strength` | `2` | Number of blur passes, from `1` to `6` |
 | `Config.TickTimeout` | `100` | Milliseconds without `ShowThisFrame` calls before the menu hides |
 
 ### Convars
@@ -247,6 +254,8 @@ web/            React, TypeScript and Tailwind interface
 The client keeps every shown menu with the resource that showed it. A menu is checked and completed with the defaults of the config in Lua, then sent to the interface. Calling `Show` again with the same `id` updates the menu in place and keeps its page. The page key drives the last shown menu that has several pages, and only this one shows the key. When a resource stops, its menus are hidden.
 
 The interface has one container per anchor. The menus of an anchor are stacked from the edge of the screen and slide in from it. The body of a menu animates its height between pages, and the rows slide in the direction of the page change.
+
+The CSS `backdrop-filter` only blurs the page, and the game is not part of it, so the glass is drawn by a WebGL renderer in a worker on an `OffscreenCanvas` behind the menus. A texture set up with the game view hook of FiveM receives the frame of the game. Each frame, the renderer copies it at a lower resolution (`Config.Glass.downscale`), blurs it with a separable Gaussian (`Config.Glass.strength` passes, limited to the area around the menus), and draws it only under the rows, with the opacity of the menu so it follows the animations. The page reads the position of the rows once per frame and only sends them to the worker when they change, and the renderer stops when no menu uses the glass. In a browser, the glass falls back to the CSS blur.
 
 In a browser, `npm run dev` shows a demo, `?position=bottom` moves it, `?page=1` opens another page, `?stack` adds a second menu and `R` switches the page.
 
