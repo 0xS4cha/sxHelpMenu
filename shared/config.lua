@@ -29,6 +29,8 @@ Config.Hide = {
     interval = 100,
 }
 
+Config.StackLimit = 3
+
 Config.TickTimeout = 100
 
 Config.Positions = {
