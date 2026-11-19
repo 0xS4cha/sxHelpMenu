@@ -187,7 +187,7 @@ end
 local function refreshFocus()
     local best = nil
     for id, entry in pairs(menus) do
-        if pageCount(entry) > 1 and (not best or entry.shownAt > menus[best].shownAt) then
+        if entry.data.key and pageCount(entry) > 1 and (not best or entry.shownAt > menus[best].shownAt) then
             best = id
         end
     end
