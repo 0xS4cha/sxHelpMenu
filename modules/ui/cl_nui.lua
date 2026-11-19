@@ -22,7 +22,7 @@ end
 function SX.UI:Initialize()
     RegisterNUICallback('nuiReady', function(_, cb)
         ready = true
-        SendNUIMessage({ action = 'setSettings', data = { gap = Config.Defaults.gap, glass = Config.Glass } })
+        SendNUIMessage({ action = 'setSettings', data = { gap = Config.Defaults.gap, glass = Config.Glass, key = tostring(Config.Keys.nextPage) } })
         for _, message in ipairs(queue) do
             SendNUIMessage(message)
         end
