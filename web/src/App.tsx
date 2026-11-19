@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import { useCallback, useEffect, useState } from 'react'
 import { Anchor, type MenuState } from './components/Anchor'
 import { configureGlass } from './glass'
@@ -18,6 +19,10 @@ interface KeyLabelData {
   label: string
 }
 
+interface HiddenData {
+  hidden: boolean
+}
+
 export default function App() {
   const [menus, setMenus] = useState<Record<string, MenuState>>({})
   const [groups, setGroups] = useState<Record<string, AnchorGroup>>({})
@@ -25,6 +30,7 @@ export default function App() {
   const [gap, setGap] = useState(1.2)
   const [glass, setGlass] = useState(false)
   const [keyLabel, setKeyLabel] = useState('R')
+  const [hidden, setHidden] = useState(false)
 
   useNuiEvent<MenuData>('setMenu', (menu) => {
     const group = groupOf(menu)
@@ -65,6 +71,7 @@ export default function App() {
   })
 
   useNuiEvent<KeyLabelData>('setKeyLabel', ({ label }) => setKeyLabel(label))
+  useNuiEvent<HiddenData>('setHidden', (data) => setHidden(data.hidden))
 
   useEffect(() => {
     void fetchNui('nuiReady', { ok: true })
@@ -92,7 +99,7 @@ export default function App() {
   const entries = Object.values(menus)
 
   return (
-    <>
+    <motion.div initial={false} animate={{ opacity: hidden ? 0 : 1 }} transition={{ duration: 0.2 }}>
       {Object.values(groups).map((group) => (
         <Anchor
           key={group.key}
@@ -104,6 +111,6 @@ export default function App() {
           keyLabel={keyLabel}
         />
       ))}
-    </>
+    </motion.div>
   )
 }

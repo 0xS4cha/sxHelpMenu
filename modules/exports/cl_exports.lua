@@ -22,6 +22,14 @@ exports("HideAll", function()
     SX.Menu:HideAll(GetInvokingResource())
 end)
 
+exports("SetHidden", function(hidden)
+    SX.Menu:SetHidden(GetInvokingResource(), hidden)
+end)
+
+exports("IsHidden", function()
+    return SX.Menu:IsHidden()
+end)
+
 exports("SetPage", function(id, page)
     return SX.Menu:SetPage(id, page)
 end)
