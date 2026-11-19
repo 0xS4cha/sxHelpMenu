@@ -86,7 +86,11 @@ export function runDemo(): void {
   vehicle.page = Math.min(Math.max(page, 0), vehicle.pages.length - 1)
 
   const messages = [{ action: 'setMenu', data: vehicle }]
-  if (params.has('stack')) messages.push({ action: 'setMenu', data: hintMenu(position) })
+  if (params.has('stack') || params.has('split')) {
+    const hint = hintMenu(position)
+    if (params.has('split')) hint.offset = { x: 32, y: 6 }
+    messages.push({ action: 'setMenu', data: hint })
+  }
   messages.push({ action: 'setFocus', data: { id: 'vehicle' } } as never)
   const key = params.get('key')
   if (key) messages.push({ action: 'setKeyLabel', data: { label: key } } as never)

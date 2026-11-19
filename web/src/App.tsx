@@ -3,7 +3,8 @@ import { Anchor, type MenuState } from './components/Anchor'
 import { configureGlass } from './glass'
 import type { GlassSettings } from './glass/types'
 import { useNuiEvent } from './hooks/useNuiEvent'
-import { POSITIONS, type MenuData, type RemoveMenuData, type SetFocusData, type SetPageData } from './types/menu'
+import { type MenuData, type RemoveMenuData, type SetFocusData, type SetPageData } from './types/menu'
+import { groupOf, type AnchorGroup } from './utils/anchor'
 import { fetchNui } from './utils/fetchNui'
 import { isEnvBrowser } from './utils/nui'
 
@@ -19,12 +20,15 @@ interface KeyLabelData {
 
 export default function App() {
   const [menus, setMenus] = useState<Record<string, MenuState>>({})
+  const [groups, setGroups] = useState<Record<string, AnchorGroup>>({})
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const [gap, setGap] = useState(1.2)
   const [glass, setGlass] = useState(false)
   const [keyLabel, setKeyLabel] = useState('R')
 
   useNuiEvent<MenuData>('setMenu', (menu) => {
+    const group = groupOf(menu)
+    setGroups((current) => (current[group.key] ? current : { ...current, [group.key]: group }))
     setMenus((current) => {
       const previous = current[menu.id]
       const direction = previous && menu.page < previous.menu.page ? -1 : 1
@@ -89,11 +93,11 @@ export default function App() {
 
   return (
     <>
-      {POSITIONS.map((position) => (
+      {Object.values(groups).map((group) => (
         <Anchor
-          key={position}
-          position={position}
-          entries={entries.filter((entry) => entry.menu.position === position)}
+          key={group.key}
+          group={group}
+          entries={entries.filter((entry) => groupOf(entry.menu).key === group.key)}
           focusedId={focusedId}
           gap={gap}
           glass={glass}
