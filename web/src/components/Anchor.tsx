@@ -13,6 +13,7 @@ interface AnchorProps {
   entries: MenuState[]
   focusedId: string | null
   gap: number
+  glass: boolean
 }
 
 function anchorStyle(position: Position, offset: { x: number; y: number }, gap: number): CSSProperties {
@@ -51,7 +52,7 @@ function anchorStyle(position: Position, offset: { x: number; y: number }, gap: 
   return style
 }
 
-export function Anchor({ position, entries, focusedId, gap }: AnchorProps) {
+export function Anchor({ position, entries, focusedId, gap, glass }: AnchorProps) {
   const sorted = [...entries].sort((a, b) => a.menu.order - b.menu.order)
   const [offset, setOffset] = useState({ x: 2.5, y: 6 })
   const first = sorted[0]?.menu.offset
@@ -61,7 +62,13 @@ export function Anchor({ position, entries, focusedId, gap }: AnchorProps) {
     <div style={anchorStyle(position, offset, gap)}>
       <AnimatePresence>
         {sorted.map(({ menu, direction }) => (
-          <HelpMenu key={menu.id} menu={menu} direction={direction} focused={menu.id === focusedId} />
+          <HelpMenu
+            key={menu.id}
+            menu={menu}
+            direction={direction}
+            focused={menu.id === focusedId}
+            glass={glass && menu.glass}
+          />
         ))}
       </AnimatePresence>
     </div>

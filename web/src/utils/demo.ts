@@ -1,7 +1,7 @@
 import { POSITIONS, type MenuData, type Position } from '../types/menu'
 import { debugData } from './debugData'
 
-const base = { offset: { x: 2.5, y: 6 }, width: 360, scale: 1, key: 'R', page: 0 }
+const base = { offset: { x: 2.5, y: 6 }, width: 360, scale: 1, key: 'R', page: 0, glass: true }
 
 function vehicleMenu(position: Position): MenuData {
   return {
