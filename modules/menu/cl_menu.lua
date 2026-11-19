@@ -184,10 +184,29 @@ local function send(entry)
     })
 end
 
+local controlling = false
+
+local function watchControl()
+    local control = tonumber(Config.Keys.control)
+    if not control or controlling then return end
+    controlling = true
+
+    CreateThread(function()
+        while focused do
+            DisableControlAction(0, control, true)
+            if IsDisabledControlJustPressed(0, control) then
+                SX.Menu:SetPage(focused, 'next')
+            end
+            Wait(0)
+        end
+        controlling = false
+    end)
+end
+
 local function refreshFocus()
     local best = nil
     for id, entry in pairs(menus) do
-        if pageCount(entry) > 1 and (not best or entry.shownAt > menus[best].shownAt) then
+        if entry.data.key and pageCount(entry) > 1 and (not best or entry.shownAt > menus[best].shownAt) then
             best = id
         end
     end
@@ -196,6 +215,8 @@ local function refreshFocus()
         focused = best
         SX.UI:Send('setFocus', { id = focused })
     end
+
+    if focused then watchControl() end
 end
 
 local function armTimer(entry, duration)
@@ -423,12 +444,14 @@ function SX.Menu:GetFocused()
 end
 
 function SX.Menu:Initialize()
-    RegisterCommand('helpmenu_nextpage', function()
-        if focused then
-            SX.Menu:SetPage(focused, 'next')
-        end
-    end, false)
-    RegisterKeyMapping('helpmenu_nextpage', GetPhrase('keymap_next_page'), 'keyboard', Config.Keys.nextPage)
+    if not tonumber(Config.Keys.control) then
+        RegisterCommand('helpmenu_nextpage', function()
+            if focused then
+                SX.Menu:SetPage(focused, 'next')
+            end
+        end, false)
+        RegisterKeyMapping('helpmenu_nextpage', GetPhrase('keymap_next_page'), 'keyboard', Config.Keys.nextPage)
+    end
 
     AddEventHandler('onResourceStop', function(resource)
         if resource == GetCurrentResourceName() then return end

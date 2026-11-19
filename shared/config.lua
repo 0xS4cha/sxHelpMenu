@@ -2,6 +2,7 @@ Config = {}
 
 Config.Keys = {
     nextPage = 'R',
+    control = nil,
 }
 
 Config.Defaults = {
