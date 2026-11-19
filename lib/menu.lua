@@ -97,6 +97,17 @@ function Menu:Show(duration)
     return self
 end
 
+function Menu:ShowThisFrame()
+    if self.data.id == nil then
+        self.data.id = ('%s_%s'):format(GetCurrentResourceName(), tostring(self):gsub('table: ', ''))
+    end
+    if self.id and exports[resource]:ShowThisFrame(self.id) then
+        return self
+    end
+    self.id = exports[resource]:ShowThisFrame(serialize(self.data))
+    return self
+end
+
 function Menu:Refresh()
     if self.id and exports[resource]:IsVisible(self.id) then
         exports[resource]:Show(serialize(self.data))
@@ -149,6 +160,7 @@ function HelpMenu.new(id, options)
 end
 
 function HelpMenu.Show(menu) return exports[resource]:Show(menu) end
+function HelpMenu.ShowThisFrame(menu) return exports[resource]:ShowThisFrame(menu) end
 function HelpMenu.Hide(id) return exports[resource]:Hide(id) end
 function HelpMenu.Update(id, patch) return exports[resource]:Update(id, patch) end
 function HelpMenu.UpdateRow(id, rowId, patch) return exports[resource]:UpdateRow(id, rowId, patch) end

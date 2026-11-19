@@ -2,6 +2,10 @@ exports("Show", function(menu)
     return SX.Menu:Show(menu, GetInvokingResource())
 end)
 
+exports("ShowThisFrame", function(menu)
+    return SX.Menu:ShowThisFrame(menu, GetInvokingResource())
+end)
+
 exports("Update", function(id, patch)
     return SX.Menu:Update(id, patch)
 end)
