@@ -176,7 +176,7 @@ end)
 | --- | --- | --- |
 | `id` | generated | Identifier of the menu |
 | `position` | `'bottom-right'` | One of the nine anchors |
-| `offset` | `{ x = 2.5, y = 6.0 }` | Distance to the edges in `vw` and `vh`. Menus on the same anchor use the offset of the first one |
+| `offset` | `{ x = 2.5, y = 6.0 }` | Distance to the edges in `vw` and `vh`. Menus with the same anchor and offset stack, a menu with another offset gets its own stack |
 | `width` | `360` | Width in pixels |
 | `scale` | `1.0` | Zoom of the whole menu |
 | `header` | | `{ subtitle, title, watermark?, image? }` |
@@ -267,7 +267,7 @@ The interface has one container per anchor. The menus of an anchor are stacked f
 
 The CSS `backdrop-filter` only blurs the page, and the game is not part of it, so the glass is drawn by a WebGL renderer in a worker on an `OffscreenCanvas` behind the menus. A texture set up with the game view hook of FiveM receives the frame of the game. Each frame, the renderer copies it at a lower resolution (`Config.Glass.downscale`), blurs it with a separable Gaussian (`Config.Glass.strength` passes, limited to the area around the menus), and draws it only under the rows, with the opacity of the menu so it follows the animations. The page reads the position of the rows once per frame and only sends them to the worker when they change, and the renderer stops when no menu uses the glass. In a browser, the glass falls back to the CSS blur.
 
-In a browser, `npm run dev` shows a demo, `?position=bottom` moves it, `?page=1` opens another page, `?stack` adds a second menu and `R` switches the page.
+In a browser, `npm run dev` shows a demo, `?position=bottom` moves it, `?page=1` opens another page, `?stack` adds a second menu, `?split` adds it with another offset and `R` switches the page.
 
 ## License
 
