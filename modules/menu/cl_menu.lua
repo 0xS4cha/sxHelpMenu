@@ -270,6 +270,52 @@ local function armTimer(entry, duration)
     end)
 end
 
+local hiders = {}
+local hidden = false
+local hideWatching = false
+
+local function shouldHide()
+    if next(hiders) then return true end
+
+    local rules = Config.Hide
+    if rules.pauseMenu and IsPauseMenuActive() then return true end
+    if rules.hudHidden and IsHudHidden() then return true end
+    if rules.screenFaded and (IsScreenFadedOut() or IsScreenFadingOut()) then return true end
+    if rules.cinematic and IsCinematicCamRendering() then return true end
+
+    return false
+end
+
+local function applyHidden()
+    local value = shouldHide()
+    if value == hidden then return end
+    hidden = value
+    SX.UI:Send('setHidden', { hidden = value })
+    TriggerEvent('sxHelpMenu:hiddenChanged', value)
+end
+
+local function watchHidden()
+    if hideWatching then return end
+    hideWatching = true
+
+    CreateThread(function()
+        while next(menus) do
+            applyHidden()
+            Wait(Config.Hide.interval)
+        end
+        hideWatching = false
+    end)
+end
+
+function SX.Menu:SetHidden(resource, value)
+    hiders[resource or 'unknown'] = value and true or nil
+    applyHidden()
+end
+
+function SX.Menu:IsHidden()
+    return hidden
+end
+
 function SX.Menu:Show(menu, resource)
     if type(menu) ~= 'table' then
         Logger:error('Menu', 'Show expects a table')
@@ -311,6 +357,7 @@ function SX.Menu:Show(menu, resource)
     send(entry)
     armTimer(entry, menu.duration)
     refreshFocus()
+    watchHidden()
 
     return menu.id
 end
@@ -492,5 +539,8 @@ function SX.Menu:Initialize()
     AddEventHandler('onResourceStop', function(resource)
         if resource == GetCurrentResourceName() then return end
         SX.Menu:HideAll(resource)
+        if hiders[resource] then
+            SX.Menu:SetHidden(resource, false)
+        end
     end)
 end

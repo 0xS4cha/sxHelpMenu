@@ -21,6 +21,14 @@ Config.Glass = {
     strength = 2,
 }
 
+Config.Hide = {
+    pauseMenu = true,
+    hudHidden = true,
+    screenFaded = true,
+    cinematic = false,
+    interval = 100,
+}
+
 Config.TickTimeout = 100
 
 Config.Positions = {

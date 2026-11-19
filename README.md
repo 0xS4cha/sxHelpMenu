@@ -16,6 +16,7 @@ A FiveM library to show help menus and info widgets in the style of Grand Theft 
 - **Live updates**: update a row or the whole menu without replaying the opening animation.
 - **Auto hide**: a duration after which the menu hides itself.
 - **Per frame**: `ShowThisFrame` shows a menu while it is called every tick and hides it when the calls stop, like the native help texts.
+- **Global hide**: the menus fade out in the pause menu, when the HUD is hidden or the screen faded out, and when a resource asks for it with `SetHidden`.
 - **Cleanup**: the menus of a resource are hidden when it stops.
 - **Glass**: the rows are drawn over a blurred copy of the game, rendered with WebGL since the CSS `backdrop-filter` does not see the game in FiveM.
 - **Icons**: every [Lucide](https://lucide.dev/icons) icon by name (`gauge`, `car-front`…) or an image URL (`nui://my_resource/logo.png`).
@@ -147,6 +148,8 @@ local id = exports.sxHelpMenu:Show({
 | `SetPage(id, page)` | `'next'`, `'prev'` or a page index starting at `0` |
 | `GetPage(id)` | Index of the shown page |
 | `IsVisible(id)` | |
+| `SetHidden(hidden)` | Hides every menu while `true`, for cutscenes or a camera mode. Each resource has its own request, the menus show again when no resource asks for it and its request is dropped when it stops |
+| `IsHidden()` | Whether the menus are hidden, by a rule of `Config.Hide` or a resource |
 | `GetFocused()` | `id` of the menu driven by the page key |
 | `GetPositions()` | List of the anchors |
 
@@ -218,6 +221,7 @@ end)
 | --- | --- | --- |
 | `sxHelpMenu:ready` | | The interface is loaded |
 | `sxHelpMenu:pageChanged` | `id`, `page` | The page of a menu changed |
+| `sxHelpMenu:hiddenChanged` | `hidden` | The menus were hidden or shown again |
 
 ## Configuration
 
@@ -237,6 +241,11 @@ Everything lives in `shared/config.lua`.
 | `Config.Glass.fps` | `60` | Maximum refresh rate of the blur |
 | `Config.Glass.downscale` | `4` | Resolution divider of the blurred image, higher is lighter and softer, from `1` to `8` |
 | `Config.Glass.strength` | `2` | Number of blur passes, from `1` to `6` |
+| `Config.Hide.pauseMenu` | `true` | Hides the menus in the pause menu |
+| `Config.Hide.hudHidden` | `true` | Hides the menus when the HUD is hidden |
+| `Config.Hide.screenFaded` | `true` | Hides the menus while the screen is faded out |
+| `Config.Hide.cinematic` | `false` | Hides the menus in the cinematic camera |
+| `Config.Hide.interval` | `100` | Milliseconds between two checks, only while a menu is shown |
 | `Config.TickTimeout` | `100` | Milliseconds without `ShowThisFrame` calls before the menu hides |
 
 ### Convars
