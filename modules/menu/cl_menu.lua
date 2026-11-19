@@ -30,10 +30,27 @@ end
 
 local ROW_TYPES = {}
 
+local function thresholdTone(thresholds, value)
+    if type(thresholds) ~= 'table' then return nil end
+
+    local best = nil
+    for _, threshold in ipairs(thresholds) do
+        local limit = type(threshold) == 'table' and toNumber(threshold.value, nil) or nil
+        local tone = limit and normalizeTone(threshold.tone)
+        if tone and value <= limit and (not best or limit < best.limit) then
+            best = { limit = limit, tone = tone }
+        end
+    end
+
+    return best and best.tone or nil
+end
+
 local function normalizeLevel(row, normalized)
     local max = toNumber(row.max, 1.0)
     if max <= 0 then max = 1.0 end
     local value = toNumber(row.value, 0.0)
+
+    normalized.tone = thresholdTone(row.thresholds, value) or normalized.tone
 
     normalized.value = Utils.Clamp(value / max, 0.0, 1.0)
     if row.display ~= nil then
