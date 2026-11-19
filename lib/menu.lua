@@ -30,6 +30,17 @@ function Page:Slider(label, value, options)
     return addRow(self, 'slider', label, value, options)
 end
 
+function Page:Image(src, options)
+    local row = {}
+    if type(options) == 'table' then
+        for k, v in pairs(options) do row[k] = v end
+    end
+    row.type = 'image'
+    row.src = src
+    self.rows[#self.rows + 1] = row
+    return self
+end
+
 function Page:Keys(keys, options)
     local row = {}
     if type(options) == 'table' then

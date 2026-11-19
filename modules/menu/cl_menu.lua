@@ -71,6 +71,14 @@ end
 
 ROW_TYPES.slider = normalizeLevel
 
+local IMAGE_FITS = { cover = true, contain = true }
+
+function ROW_TYPES.image(row, normalized)
+    normalized.src = type(row.src) == 'string' and row.src or ''
+    normalized.height = math.floor(Utils.Clamp(toNumber(row.height, 120), 40, 320))
+    normalized.fit = IMAGE_FITS[row.fit] and row.fit or 'cover'
+end
+
 local MAX_KEYS = 6
 
 function ROW_TYPES.keys(row, normalized)
