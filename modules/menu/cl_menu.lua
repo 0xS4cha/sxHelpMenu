@@ -6,7 +6,6 @@ local focused = nil
 local counter = 0
 
 local TONES = { neutral = true, danger = true, safe = true, warning = true, accent = true }
-local ROW_TYPES = { text = true, bar = true, slider = true }
 
 local validPositions = {}
 for _, position in ipairs(Config.Positions) do
@@ -29,11 +28,38 @@ local function toNumber(value, default)
     return value
 end
 
+local ROW_TYPES = {}
+
+local function normalizeLevel(row, normalized)
+    local max = toNumber(row.max, 1.0)
+    if max <= 0 then max = 1.0 end
+    local value = toNumber(row.value, 0.0)
+
+    normalized.value = Utils.Clamp(value / max, 0.0, 1.0)
+    if row.display ~= nil then
+        normalized.display = tostring(row.display)
+    elseif max ~= 1.0 then
+        normalized.display = tostring(Utils.Round(value, 1))
+    end
+end
+
+function ROW_TYPES.text(row, normalized)
+    normalized.value = row.value ~= nil and tostring(row.value) or ''
+end
+
+function ROW_TYPES.bar(row, normalized)
+    normalizeLevel(row, normalized)
+    normalized.segments = math.floor(Utils.Clamp(toNumber(row.segments, 10), 2, 30))
+end
+
+ROW_TYPES.slider = normalizeLevel
+
 local function normalizeRow(row)
     if type(row) ~= 'table' then return nil end
 
     local kind = row.type or 'text'
-    if not ROW_TYPES[kind] then
+    local normalizer = ROW_TYPES[kind]
+    if not normalizer then
         Logger:warn('Menu', ('Unknown row type "%s"'):format(tostring(kind)))
         return nil
     end
@@ -47,25 +73,7 @@ local function normalizeRow(row)
         scramble = row.scramble ~= false,
     }
 
-    if kind == 'text' then
-        normalized.value = row.value ~= nil and tostring(row.value) or ''
-    else
-        local max = toNumber(row.max, 1.0)
-        if max <= 0 then max = 1.0 end
-        local value = toNumber(row.value, 0.0)
-
-        normalized.value = Utils.Clamp(value / max, 0.0, 1.0)
-        if row.display ~= nil then
-            normalized.display = tostring(row.display)
-        elseif max ~= 1.0 then
-            normalized.display = tostring(Utils.Round(value, 1))
-        end
-
-        if kind == 'bar' then
-            normalized.segments = math.floor(Utils.Clamp(toNumber(row.segments, 10), 2, 30))
-        end
-    end
-
+    normalizer(row, normalized)
     return normalized
 end
 
