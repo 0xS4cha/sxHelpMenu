@@ -89,6 +89,7 @@ export interface MenuData {
   key?: string
   page: number
   order: number
+  glass: boolean
 }
 
 export interface SetPageData {

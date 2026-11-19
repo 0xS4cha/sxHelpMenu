@@ -151,6 +151,9 @@ local function normalizeMenu(menu)
     local key = menu.key
     if key == nil then key = Config.Keys.nextPage end
 
+    local glass = Config.Defaults.glass
+    if menu.glass ~= nil then glass = menu.glass == true end
+
     return {
         id = menu.id,
         position = position,
@@ -160,6 +163,7 @@ local function normalizeMenu(menu)
         header = normalizeHeader(menu.header),
         pages = pages,
         key = key ~= false and tostring(key) or nil,
+        glass = glass,
     }
 end
 
@@ -176,6 +180,7 @@ local function send(entry)
         key = data.key,
         page = entry.page,
         order = entry.order,
+        glass = data.glass,
     })
 end
 

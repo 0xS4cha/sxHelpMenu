@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Anchor, type MenuState } from './components/Anchor'
+import { configureGlass } from './glass'
+import type { GlassSettings } from './glass/types'
 import { useNuiEvent } from './hooks/useNuiEvent'
 import { POSITIONS, type MenuData, type RemoveMenuData, type SetFocusData, type SetPageData } from './types/menu'
 import { fetchNui } from './utils/fetchNui'
@@ -7,12 +9,14 @@ import { isEnvBrowser } from './utils/nui'
 
 interface SettingsData {
   gap?: number
+  glass?: GlassSettings
 }
 
 export default function App() {
   const [menus, setMenus] = useState<Record<string, MenuState>>({})
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const [gap, setGap] = useState(1.2)
+  const [glass, setGlass] = useState(false)
 
   useNuiEvent<MenuData>('setMenu', (menu) => {
     setMenus((current) => {
@@ -43,6 +47,10 @@ export default function App() {
   useNuiEvent<SetFocusData>('setFocus', ({ id }) => setFocusedId(id ?? null))
   useNuiEvent<SettingsData>('setSettings', (data) => {
     if (typeof data.gap === 'number') setGap(data.gap)
+    if (data.glass) {
+      configureGlass(data.glass)
+      setGlass(data.glass.enabled && !isEnvBrowser())
+    }
   })
 
   useEffect(() => {
@@ -79,6 +87,7 @@ export default function App() {
           entries={entries.filter((entry) => entry.menu.position === position)}
           focusedId={focusedId}
           gap={gap}
+          glass={glass}
         />
       ))}
     </>

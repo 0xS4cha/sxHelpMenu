@@ -1,4 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
+import { useRef } from 'react'
+import { useGlass } from '../hooks/useGlass'
 import type { MenuData, Position } from '../types/menu'
 import { Footer } from './Footer'
 import { Header } from './Header'
@@ -12,6 +14,7 @@ interface HelpMenuProps {
   menu: MenuData
   direction: number
   focused: boolean
+  glass: boolean
 }
 
 function enterOffset(position: Position): { x: number; y: number; scale: number } {
@@ -22,7 +25,10 @@ function enterOffset(position: Position): { x: number; y: number; scale: number 
   return { x: 0, y: 0, scale: 0.94 }
 }
 
-export function HelpMenu({ menu, direction, focused }: HelpMenuProps) {
+export function HelpMenu({ menu, direction, focused, glass }: HelpMenuProps) {
+  const body = useRef<HTMLDivElement>(null)
+  useGlass(body, glass)
+
   const page = menu.pages[Math.min(menu.page, menu.pages.length - 1)]
   if (!page) return null
 
@@ -109,7 +115,8 @@ export function HelpMenu({ menu, direction, focused }: HelpMenuProps) {
         </AnimatePresence>
 
         <motion.div
-          className="relative overflow-hidden bg-gradient-to-b from-[#5b5f6c]/55 to-[#3f4250]/60 backdrop-blur-md"
+          ref={body}
+          className={`relative overflow-hidden bg-gradient-to-b from-[#5b5f6c]/55 to-[#3f4250]/60 ${glass ? '' : 'backdrop-blur-md'}`}
           initial={false}
           animate={{ height: bodyHeight }}
           transition={{ duration: 0.25, ease: EASE }}
