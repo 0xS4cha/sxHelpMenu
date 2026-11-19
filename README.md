@@ -286,9 +286,10 @@ Everything lives in `shared/config.lua`.
 core/           Module loader, class helper, logger, translations, utilities
 modules/
   ui/           NUI bridge, messages are queued until the interface is ready
-  menu/         Menus, pages, focus, page key and cleanup
+  menu/         Menus, pages, focus, page key and cleanup, normalization in cl_normalize.lua
   exports/      Public client API
 lib/            Lua builder included by other resources
+tests/          Lua tests of the normalization
 shared/         Configuration
 translations/   Language files
 web/            React, TypeScript and Tailwind interface
@@ -301,6 +302,18 @@ The interface has one container per anchor. The menus of an anchor are stacked f
 The CSS `backdrop-filter` only blurs the page, and the game is not part of it, so the glass is drawn by a WebGL renderer in a worker on an `OffscreenCanvas` behind the menus. A texture set up with the game view hook of FiveM receives the frame of the game. Each frame, the renderer copies it at a lower resolution (`Config.Glass.downscale`), blurs it with a separable Gaussian (`Config.Glass.strength` passes, limited to the area around the menus), and draws it only under the rows, with the opacity of the menu so it follows the animations. The page reads the position of the rows once per frame and only sends them to the worker when they change, and the renderer stops when no menu uses the glass. In a browser, the glass falls back to the CSS blur.
 
 In a browser, `npm run dev` shows a demo, `?position=bottom` moves it, `?page=1` opens another page, `?stack` adds a second menu, `?split` adds it with another offset and `R` switches the page.
+
+## Development
+
+```bash
+lua tests/lua/run.lua
+cd web
+npm test
+npm run lint
+npm run build
+```
+
+`tests/lua/run.lua` checks the menu normalization of `modules/menu/cl_normalize.lua` with plain Lua 5.4: defaults, anchors, keys, tones, every row type, thresholds and countdowns. `npm test` runs the Vitest tests of the interface helpers.
 
 ## License
 
