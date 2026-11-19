@@ -23,6 +23,17 @@ interface HiddenData {
   hidden: boolean
 }
 
+function withDeadlines(menu: MenuData): MenuData {
+  const now = performance.now()
+  return {
+    ...menu,
+    pages: menu.pages.map((page) => ({
+      ...page,
+      rows: page.rows.map((row) => (row.type === 'countdown' ? { ...row, deadline: now + row.remaining } : row)),
+    })),
+  }
+}
+
 export default function App() {
   const [menus, setMenus] = useState<Record<string, MenuState>>({})
   const [groups, setGroups] = useState<Record<string, AnchorGroup>>({})
@@ -32,7 +43,8 @@ export default function App() {
   const [keyLabel, setKeyLabel] = useState('R')
   const [hidden, setHidden] = useState(false)
 
-  useNuiEvent<MenuData>('setMenu', (menu) => {
+  useNuiEvent<MenuData>('setMenu', (payload) => {
+    const menu = withDeadlines(payload)
     const group = groupOf(menu)
     setGroups((current) => (current[group.key] ? current : { ...current, [group.key]: group }))
     setMenus((current) => {

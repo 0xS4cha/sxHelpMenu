@@ -30,6 +30,13 @@ function Page:Slider(label, value, options)
     return addRow(self, 'slider', label, value, options)
 end
 
+function Page:Countdown(label, seconds, options)
+    addRow(self, 'countdown', label, seconds, options)
+    local row = self.rows[#self.rows]
+    row.endsAt = row.endsAt or (GetGameTimer() + (tonumber(seconds) or 0) * 1000)
+    return self
+end
+
 function Page:Footer(label, items)
     self.footer = { label = label, items = items or {} }
     return self
