@@ -43,6 +43,15 @@ function vehicleMenu(position: Position): MenuData {
           { type: 'bar', label: 'Acceleration', value: 0.52 },
           { type: 'bar', label: 'Braking', value: 0.25 },
           { type: 'bar', label: 'Traction', value: 0.67 },
+          {
+            type: 'stats',
+            label: '',
+            items: [
+              { label: 'Class', value: 'Super', icon: 'car-front' },
+              { label: 'Seats', value: '2', icon: 'armchair' },
+              { label: 'Engine', value: '18%', icon: 'wrench', tone: 'danger' },
+            ],
+          },
         ],
       },
       {

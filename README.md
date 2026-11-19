@@ -108,6 +108,7 @@ menu:Hide()
 | `page:Text(label, value, options?)` | Adds a text row |
 | `page:Bar(label, value, options?)` | Adds a segmented bar |
 | `page:Slider(label, value, options?)` | Adds a slider |
+| `page:Stats(items, options?)` | Adds up to 4 small values side by side, `items` is a list of `{ label?, value, icon?, tone? }` |
 | `page:Image(src, options?)` | Adds an image across the menu, `options` takes `label`, `height` and `fit` |
 | `page:Keys(keys, options?)` | Adds a row of keys, `keys` is a list of `{ key, label? }`, `options.label` adds a label on the left |
 | `page:Countdown(label, seconds, options?)` | Adds a countdown, its end is fixed when the row is created |
@@ -207,7 +208,7 @@ end)
 
 | Field | Rows | Description |
 | --- | --- | --- |
-| `type` | all | `'text'`, `'bar'`, `'slider'`, `'countdown'`, `'keys'` or `'image'` |
+| `type` | all | `'text'`, `'bar'`, `'slider'`, `'countdown'`, `'keys'`, `'image'` or `'stats'` |
 | `id` | all | Used by `UpdateRow` |
 | `label` | all | Text on the left |
 | `value` | all | Text for `text`, a number between `0` and `max` for `bar` and `slider`, seconds left for `countdown` |
@@ -217,6 +218,7 @@ end)
 | `max` | `bar`, `slider` | Maximum of `value`, `1` by default |
 | `display` | `bar`, `slider` | Text shown instead of the percentage, or of the value when `max` is set |
 | `segments` | `bar` | Number of segments, `10` by default |
+| `items` | `stats` | Up to 4 `{ label?, value, icon?, tone? }` in equal columns, the label small above the value |
 | `src` | `image` | Image URL, `nui://my_resource/image.png` for a file of your resource |
 | `height` | `image` | Height in pixels, `120` by default, from `40` to `320` |
 | `fit` | `image` | `'cover'` (default) fills the row, `'contain'` shows the whole image. The `label` is written over the bottom of the image |

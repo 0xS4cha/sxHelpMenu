@@ -4,6 +4,7 @@ import { CountdownRow } from './CountdownRow'
 import { ImageRow } from './ImageRow'
 import { KeysRow } from './KeysRow'
 import { SliderRow } from './SliderRow'
+import { StatsRow } from './StatsRow'
 import { TextRow } from './TextRow'
 
 export function Row({ row, index, last }: { row: RowData; index: number; last?: boolean }) {
@@ -16,6 +17,8 @@ export function Row({ row, index, last }: { row: RowData; index: number; last?: 
       return <ImageRow row={row} index={index} last={last} />
     case 'keys':
       return <KeysRow row={row} index={index} last={last} />
+    case 'stats':
+      return <StatsRow row={row} index={index} last={last} />
     case 'slider':
       return <SliderRow row={row} index={index} last={last} />
     default:
