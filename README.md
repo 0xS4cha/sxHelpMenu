@@ -214,6 +214,17 @@ end)
 | `max` | `bar`, `slider` | Maximum of `value`, `1` by default |
 | `display` | `bar`, `slider` | Text shown instead of the percentage, or of the value when `max` is set |
 | `segments` | `bar` | Number of segments, `10` by default |
+| `thresholds` | `bar`, `slider` | List of `{ value, tone }`, in the unit of `value`. The row takes the tone of the lowest threshold that `value` is under or equal to, otherwise its `tone` |
+
+```lua
+page:Bar('Fuel', fuel, {
+    max = 100,
+    thresholds = {
+        { value = 20, tone = 'danger' },
+        { value = 50, tone = 'warning' },
+    },
+})
+```
 
 ### Events
 
