@@ -53,7 +53,7 @@ None.
 | --- | --- |
 | `R` / `helpmenu_nextpage` | Next page of the last shown menu that has several pages |
 
-The key can be changed in *Settings > Key Bindings > FiveM*.
+The key can be changed in *Settings > Key Bindings > FiveM*, the badge on the menus follows the key bound by the player.
 
 Keys already used by the game, like `TAB` for the weapon wheel, cannot be bound this way since the game catches them first. Set `Config.Keys.control` to the [control](https://docs.fivem.net/docs/game-references/controls/) of this key instead, the key mapping is then not registered and the control is disabled and read while a menu with several pages is shown:
 
@@ -183,7 +183,7 @@ end)
 | `pages` | | List of pages. Without pages, `title`, `icon`, `rows` and `footer` of the menu make a single page |
 | `page` | `0` | Page shown first |
 | `glass` | `Config.Defaults.glass` | Blurs the game behind the rows, `false` keeps a plain translucent background |
-| `key` | `Config.Keys.nextPage` | Label of the page key, `false` to hide it and ignore the key |
+| `key` | `true` | `true` shows the key bound by the player, a string shows this label instead, `false` hides it and ignores the key |
 | `duration` | | Milliseconds before the menu hides itself |
 | `order` | | Order of the menus on the same anchor, the lowest is the closest to the edge |
 

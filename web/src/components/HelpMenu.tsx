@@ -5,6 +5,7 @@ import type { MenuData, Position } from '../types/menu'
 import { Footer } from './Footer'
 import { Header } from './Header'
 import { Icon } from './Icon'
+import { KeyBadge } from './KeyBadge'
 import { FOOTER_HEIGHT, rowHeight } from '../utils/layout'
 import { Row } from './rows'
 
@@ -15,6 +16,7 @@ interface HelpMenuProps {
   direction: number
   focused: boolean
   glass: boolean
+  keyLabel: string
 }
 
 function enterOffset(position: Position): { x: number; y: number; scale: number } {
@@ -25,7 +27,7 @@ function enterOffset(position: Position): { x: number; y: number; scale: number 
   return { x: 0, y: 0, scale: 0.94 }
 }
 
-export function HelpMenu({ menu, direction, focused, glass }: HelpMenuProps) {
+export function HelpMenu({ menu, direction, focused, glass, keyLabel }: HelpMenuProps) {
   const body = useRef<HTMLDivElement>(null)
   useGlass(body, glass)
 
@@ -86,13 +88,13 @@ export function HelpMenu({ menu, direction, focused, glass }: HelpMenuProps) {
             {multi && focused && menu.key && (
               <motion.span
                 key="key"
-                className="flex h-[24px] min-w-[24px] items-center justify-center rounded-[4px] bg-white px-1 text-[17px] font-bold uppercase leading-none text-help-panel shadow-[0_2px_0_rgba(0,0,0,0.35)]"
+                className="flex"
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.6 }}
                 transition={{ duration: 0.15 }}
               >
-                {menu.key}
+                <KeyBadge label={typeof menu.key === 'string' ? menu.key : keyLabel} />
               </motion.span>
             )}
           </AnimatePresence>

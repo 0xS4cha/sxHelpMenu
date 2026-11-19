@@ -149,7 +149,11 @@ local function normalizeMenu(menu)
     end
 
     local key = menu.key
-    if key == nil then key = Config.Keys.nextPage end
+    if key == nil or key == true then
+        key = true
+    elseif key ~= false then
+        key = tostring(key)
+    end
 
     local glass = Config.Defaults.glass
     if menu.glass ~= nil then glass = menu.glass == true end
@@ -162,7 +166,7 @@ local function normalizeMenu(menu)
         scale = toNumber(menu.scale, Config.Defaults.scale),
         header = normalizeHeader(menu.header),
         pages = pages,
-        key = key ~= false and tostring(key) or nil,
+        key = key ~= false and key or nil,
         glass = glass,
     }
 end
@@ -184,22 +188,51 @@ local function send(entry)
     })
 end
 
-local controlling = false
+local KEY_COMMAND = 'helpmenu_nextpage'
+local KEY_REFRESH = 1000
 
-local function watchControl()
+local focusWatching = false
+local keyLabel = nil
+
+local function resolveKeyLabel()
+    if tonumber(Config.Keys.control) then
+        return tostring(Config.Keys.nextPage)
+    end
+
+    local button = GetControlInstructionalButton(0, GetHashKey(KEY_COMMAND) | 0x80000000, true)
+    if type(button) == 'string' and button:sub(1, 2) == 't_' and #button > 2 then
+        return button:sub(3)
+    end
+
+    return tostring(Config.Keys.nextPage)
+end
+
+local function updateKeyLabel()
+    local label = resolveKeyLabel()
+    if label == keyLabel then return end
+    keyLabel = label
+    SX.UI:Send('setKeyLabel', { label = label })
+end
+
+local function watchFocus()
+    if focusWatching then return end
+    focusWatching = true
     local control = tonumber(Config.Keys.control)
-    if not control or controlling then return end
-    controlling = true
 
     CreateThread(function()
         while focused do
-            DisableControlAction(0, control, true)
-            if IsDisabledControlJustPressed(0, control) then
-                SX.Menu:SetPage(focused, 'next')
+            if control then
+                DisableControlAction(0, control, true)
+                if IsDisabledControlJustPressed(0, control) then
+                    SX.Menu:SetPage(focused, 'next')
+                end
+                Wait(0)
+            else
+                updateKeyLabel()
+                Wait(KEY_REFRESH)
             end
-            Wait(0)
         end
-        controlling = false
+        focusWatching = false
     end)
 end
 
@@ -216,7 +249,10 @@ local function refreshFocus()
         SX.UI:Send('setFocus', { id = focused })
     end
 
-    if focused then watchControl() end
+    if focused then
+        updateKeyLabel()
+        watchFocus()
+    end
 end
 
 local function armTimer(entry, duration)
@@ -445,12 +481,12 @@ end
 
 function SX.Menu:Initialize()
     if not tonumber(Config.Keys.control) then
-        RegisterCommand('helpmenu_nextpage', function()
+        RegisterCommand(KEY_COMMAND, function()
             if focused then
                 SX.Menu:SetPage(focused, 'next')
             end
         end, false)
-        RegisterKeyMapping('helpmenu_nextpage', GetPhrase('keymap_next_page'), 'keyboard', Config.Keys.nextPage)
+        RegisterKeyMapping(KEY_COMMAND, GetPhrase('keymap_next_page'), 'keyboard', Config.Keys.nextPage)
     end
 
     AddEventHandler('onResourceStop', function(resource)
