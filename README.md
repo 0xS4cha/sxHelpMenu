@@ -12,7 +12,7 @@ A FiveM library to show help menus and info widgets in the style of Grand Theft 
 - **Pages**: a menu has one or more pages, with a title and an icon, switched with a key. The dots and the key are shown above the menu.
 - **Rows**: text with an optional icon badge, segmented bar and slider with a value badge, each with a tone (`neutral`, `danger`, `safe`, `warning`, `accent` or a hex color).
 - **Header and footer**: a dark header with a subtitle, a title and a watermark (text or image), and a dark footer with a label and values with icons. Both can change per page.
-- **Positions**: `bottom-right` by default, or `top-left`, `top`, `top-right`, `left`, `center`, `right`, `bottom-left` and `bottom`, with an offset in `vw` / `vh`. Menus on the same anchor stack.
+- **Positions**: `bottom-right` by default, or `top-left`, `top`, `top-right`, `left`, `center`, `right`, `bottom-left` and `bottom`, with an offset in `vw` / `vh`. Menus on the same anchor stack, up to `Config.StackLimit`.
 - **Live updates**: update a row or the whole menu without replaying the opening animation.
 - **Auto hide**: a duration after which the menu hides itself.
 - **Per frame**: `ShowThisFrame` shows a menu while it is called every tick and hides it when the calls stop, like the native help texts.
@@ -246,6 +246,7 @@ Everything lives in `shared/config.lua`.
 | `Config.Hide.screenFaded` | `true` | Hides the menus while the screen is faded out |
 | `Config.Hide.cinematic` | `false` | Hides the menus in the cinematic camera |
 | `Config.Hide.interval` | `100` | Milliseconds between two checks, only while a menu is shown |
+| `Config.StackLimit` | `3` | Maximum menus in a stack (same anchor and offset), the oldest one is hidden when a new one is shown, `0` for no limit |
 | `Config.TickTimeout` | `100` | Milliseconds without `ShowThisFrame` calls before the menu hides |
 
 ### Convars

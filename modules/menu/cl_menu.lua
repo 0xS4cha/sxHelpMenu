@@ -270,6 +270,30 @@ local function armTimer(entry, duration)
     end)
 end
 
+local function sameStack(a, b)
+    return a.position == b.position and a.offset.x == b.offset.x and a.offset.y == b.offset.y
+end
+
+local function enforceLimit(id)
+    local limit = tonumber(Config.StackLimit) or 0
+    local entry = menus[id]
+    if limit <= 0 or not entry then return end
+
+    local others = {}
+    for otherId, other in pairs(menus) do
+        if otherId ~= id and sameStack(other.data, entry.data) then
+            others[#others + 1] = otherId
+        end
+    end
+
+    if #others < limit then return end
+    table.sort(others, function(a, b) return menus[a].shownAt < menus[b].shownAt end)
+
+    for i = 1, #others - limit + 1 do
+        SX.Menu:Hide(others[i])
+    end
+end
+
 local hiders = {}
 local hidden = false
 local hideWatching = false
@@ -355,6 +379,7 @@ function SX.Menu:Show(menu, resource)
     if resource then entry.resource = resource end
 
     send(entry)
+    enforceLimit(menu.id)
     armTimer(entry, menu.duration)
     refreshFocus()
     watchHidden()
@@ -374,6 +399,7 @@ function SX.Menu:Update(id, patch)
     entry.data = normalizeMenu(raw)
     entry.page = math.min(entry.page, #entry.data.pages - 1)
     send(entry)
+    enforceLimit(entry.data.id)
     if patch.duration ~= nil then
         armTimer(entry, patch.duration)
     end
