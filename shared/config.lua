@@ -12,6 +12,8 @@ Config.Defaults = {
     gap = 1.2,
 }
 
+Config.TickTimeout = 100
+
 Config.Positions = {
     'top-left', 'top', 'top-right',
     'left', 'center', 'right',

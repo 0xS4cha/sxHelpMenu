@@ -15,6 +15,7 @@ A FiveM library to show help menus and info widgets in the style of Grand Theft 
 - **Positions**: `bottom-right` by default, or `top-left`, `top`, `top-right`, `left`, `center`, `right`, `bottom-left` and `bottom`, with an offset in `vw` / `vh`. Menus on the same anchor stack.
 - **Live updates**: update a row or the whole menu without replaying the opening animation.
 - **Auto hide**: a duration after which the menu hides itself.
+- **Per frame**: `ShowThisFrame` shows a menu while it is called every tick and hides it when the calls stop, like the native help texts.
 - **Cleanup**: the menus of a resource are hidden when it stops.
 - **Icons**: every [Lucide](https://lucide.dev/icons) icon by name (`gauge`, `car-front`…) or an image URL (`nui://my_resource/logo.png`).
 - **Builder**: a Lua file to include in your resource with a chainable API, or plain exports.
@@ -99,6 +100,7 @@ menu:Hide()
 | `page:Footer(label, items)` | Footer of the page |
 | `page:Header(subtitle, title, options?)` | Header of this page only |
 | `menu:Show(duration?)` | Shows the menu, or updates it when it is already shown |
+| `menu:ShowThisFrame()` | Shows the menu while it is called every tick, see [Per frame](#per-frame) |
 | `menu:Refresh()` | Sends the changes made with the builder to a shown menu |
 | `menu:SetRow(rowId, patch)` | Updates the rows with this `id` |
 | `menu:SetPage(page)` / `menu:GetPage()` | `'next'`, `'prev'` or a page index starting at `0` |
@@ -127,6 +129,7 @@ local id = exports.sxHelpMenu:Show({
 | Export | Description |
 | --- | --- |
 | `Show(menu)` | Shows a menu, or updates it when its `id` is already shown. Returns the `id` |
+| `ShowThisFrame(menu or id)` | Shows a menu while it is called every tick, see [Per frame](#per-frame). Returns the `id`, or `nil` when an `id` alone is not shown |
 | `Update(id, patch)` | Replaces fields of a shown menu |
 | `UpdateRow(id, rowId, patch)` | Replaces fields of the rows with this `id` |
 | `Hide(id)` | Hides a menu |
@@ -136,6 +139,26 @@ local id = exports.sxHelpMenu:Show({
 | `IsVisible(id)` | |
 | `GetFocused()` | `id` of the menu driven by the page key |
 | `GetPositions()` | List of the anchors |
+
+### Per frame
+
+`ShowThisFrame` is made to be called every tick. The first call sends the menu to the interface, the next calls only keep it alive, so they are cheap. When it is not called for `Config.TickTimeout` milliseconds, the menu is hidden.
+
+```lua
+CreateThread(function()
+    while true do
+        if IsNearShop() then
+            exports.sxHelpMenu:ShowThisFrame(shopMenu)
+        end
+        Wait(0)
+    end
+end)
+```
+
+- The menu needs an `id`. The builder generates one.
+- Pass the `id` alone after the first call to avoid sending the whole table every tick: `ShowThisFrame('shop')` returns `nil` when the menu is not shown, then pass the table again.
+- The content is only sent on the first call. To change it, use `Update` or `UpdateRow`.
+- Calling `Show` on the same `id` keeps the menu open without the per frame calls.
 
 ### Menu
 
@@ -197,6 +220,7 @@ Everything lives in `shared/config.lua`.
 | `Config.Defaults.width` | `360` | Width of the menus without `width` |
 | `Config.Defaults.scale` | `1.0` | Zoom of the menus without `scale` |
 | `Config.Defaults.gap` | `1.2` | Space between the menus on the same anchor, in `vh` |
+| `Config.TickTimeout` | `100` | Milliseconds without `ShowThisFrame` calls before the menu hides |
 
 ### Convars
 

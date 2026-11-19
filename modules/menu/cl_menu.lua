@@ -243,6 +243,7 @@ function SX.Menu:Show(menu, resource)
     end
 
     entry.shownAt = GetGameTimer()
+    entry.tickAt = nil
     if resource then entry.resource = resource end
 
     send(entry)
@@ -305,6 +306,56 @@ function SX.Menu:UpdateRow(id, rowId, patch)
     entry.data = normalizeMenu(entry.raw)
     send(entry)
     return true
+end
+
+local watching = false
+
+local function watchTicks()
+    if watching then return end
+    watching = true
+
+    CreateThread(function()
+        while true do
+            local now = GetGameTimer()
+            local active = false
+
+            for id, entry in pairs(menus) do
+                if entry.tickAt then
+                    if now - entry.tickAt > Config.TickTimeout then
+                        SX.Menu:Hide(id)
+                    else
+                        active = true
+                    end
+                end
+            end
+
+            if not active then break end
+            Wait(0)
+        end
+
+        watching = false
+    end)
+end
+
+function SX.Menu:ShowThisFrame(menu, resource)
+    local id = type(menu) == 'table' and menu.id or menu
+    if id == nil then
+        Logger:error('Menu', 'ShowThisFrame needs a menu with an id')
+        return nil
+    end
+    id = tostring(id)
+
+    local entry = menus[id]
+    if not entry then
+        if type(menu) ~= 'table' then return nil end
+        self:Show(menu, resource)
+        entry = menus[id]
+        if not entry then return nil end
+    end
+
+    entry.tickAt = GetGameTimer()
+    watchTicks()
+    return id
 end
 
 function SX.Menu:Hide(id)
