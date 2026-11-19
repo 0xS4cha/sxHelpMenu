@@ -71,6 +71,7 @@ function hintMenu(position: Position): MenuData {
         rows: [
           { type: 'text', label: 'Scan', value: 'Left click', icon: 'mouse-pointer-click' },
           { type: 'text', label: 'Next page', value: 'R', icon: 'arrow-right', tone: 'accent' },
+          { type: 'keys', label: '', keys: [{ key: 'E', label: 'Open' }, { key: 'G', label: 'Lock' }, { key: 'TAB', label: 'Menu' }] },
         ],
       },
     ],

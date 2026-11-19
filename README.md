@@ -108,6 +108,7 @@ menu:Hide()
 | `page:Text(label, value, options?)` | Adds a text row |
 | `page:Bar(label, value, options?)` | Adds a segmented bar |
 | `page:Slider(label, value, options?)` | Adds a slider |
+| `page:Keys(keys, options?)` | Adds a row of keys, `keys` is a list of `{ key, label? }`, `options.label` adds a label on the left |
 | `page:Countdown(label, seconds, options?)` | Adds a countdown, its end is fixed when the row is created |
 | `page:Footer(label, items)` | Footer of the page |
 | `page:Header(subtitle, title, options?)` | Header of this page only |
@@ -205,7 +206,7 @@ end)
 
 | Field | Rows | Description |
 | --- | --- | --- |
-| `type` | all | `'text'`, `'bar'`, `'slider'` or `'countdown'` |
+| `type` | all | `'text'`, `'bar'`, `'slider'`, `'countdown'` or `'keys'` |
 | `id` | all | Used by `UpdateRow` |
 | `label` | all | Text on the left |
 | `value` | all | Text for `text`, a number between `0` and `max` for `bar` and `slider`, seconds left for `countdown` |
@@ -215,6 +216,7 @@ end)
 | `max` | `bar`, `slider` | Maximum of `value`, `1` by default |
 | `display` | `bar`, `slider` | Text shown instead of the percentage, or of the value when `max` is set |
 | `segments` | `bar` | Number of segments, `10` by default |
+| `keys` | `keys` | Up to 6 `{ key, label? }`, each key in a round badge followed by its label |
 | `endsAt` | `countdown` | End of the countdown in `GetGameTimer()` milliseconds. Without it, `value` is converted on the first `Show`, set it for menus shown again with the same table |
 | `done` | `countdown` | Text shown at the end instead of `00:00` |
 | `doneTone` | `countdown` | Tone at the end |

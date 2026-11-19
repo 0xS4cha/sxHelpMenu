@@ -57,7 +57,17 @@ export interface CountdownRowData extends BaseRow {
   doneTone?: Tone
 }
 
-export type RowData = TextRowData | BarRowData | SliderRowData | CountdownRowData
+export interface KeyHint {
+  key: string
+  label?: string
+}
+
+export interface KeysRowData extends BaseRow {
+  type: 'keys'
+  keys: KeyHint[]
+}
+
+export type RowData = TextRowData | BarRowData | SliderRowData | CountdownRowData | KeysRowData
 
 export interface FooterItem {
   value: string

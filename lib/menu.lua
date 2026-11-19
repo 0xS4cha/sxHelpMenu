@@ -30,6 +30,17 @@ function Page:Slider(label, value, options)
     return addRow(self, 'slider', label, value, options)
 end
 
+function Page:Keys(keys, options)
+    local row = {}
+    if type(options) == 'table' then
+        for k, v in pairs(options) do row[k] = v end
+    end
+    row.type = 'keys'
+    row.keys = keys
+    self.rows[#self.rows + 1] = row
+    return self
+end
+
 function Page:Countdown(label, seconds, options)
     addRow(self, 'countdown', label, seconds, options)
     local row = self.rows[#self.rows]
