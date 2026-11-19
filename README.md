@@ -1,5 +1,7 @@
 # sxHelpMenu
 
+[![CI](https://github.com/0xS4cha/sxHelpMenu/actions/workflows/ci.yml/badge.svg)](https://github.com/0xS4cha/sxHelpMenu/actions/workflows/ci.yml)
+
 A FiveM library to show help menus and info widgets in the style of Grand Theft Auto VI (GTA 6). Other resources describe a menu in Lua, with pages of text rows, segmented bars, sliders and a footer, and sxHelpMenu draws it in the bottom right of the screen or at any of the nine anchors.
 
 ![Image](previews/image.png)
@@ -314,6 +316,8 @@ npm run build
 ```
 
 `tests/lua/run.lua` checks the menu normalization of `modules/menu/cl_normalize.lua` with plain Lua 5.4: defaults, anchors, keys, tones, every row type, thresholds and countdowns. `npm test` runs the Vitest tests of the interface helpers.
+
+The `CI` workflow runs the same checks on every push to `main` and every pull request. Pushing a `v*` tag runs the `Release` workflow: it builds the interface, packages `sxHelpMenu.zip` without the previews and the tests, and attaches it to the release of the tag, or creates a draft release when there is none.
 
 ## License
 
