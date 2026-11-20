@@ -238,6 +238,7 @@ local function normalizeMenu(menu)
         pages = pages,
         key = key ~= false and key or nil,
         glass = glass,
+        pauseMenu = menu.pauseMenu == true,
     }
 end
 

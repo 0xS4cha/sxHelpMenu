@@ -15,9 +15,11 @@ interface AnchorProps {
   gap: number
   glass: boolean
   keyLabel: string
+  hidden: boolean
+  pauseOnly: boolean
 }
 
-export function Anchor({ group, entries, focusedId, gap, glass, keyLabel }: AnchorProps) {
+export function Anchor({ group, entries, focusedId, gap, glass, keyLabel, hidden, pauseOnly }: AnchorProps) {
   const sorted = [...entries].sort((a, b) => a.menu.order - b.menu.order)
 
   return (
@@ -31,6 +33,7 @@ export function Anchor({ group, entries, focusedId, gap, glass, keyLabel }: Anch
             focused={menu.id === focusedId}
             glass={glass && menu.glass}
             keyLabel={keyLabel}
+            hidden={hidden && !(pauseOnly && menu.pauseMenu)}
           />
         ))}
       </AnimatePresence>

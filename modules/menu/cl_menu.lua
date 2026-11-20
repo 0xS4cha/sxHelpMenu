@@ -142,26 +142,31 @@ end
 
 local hiders = {}
 local hidden = false
+local pauseOnly = false
 local hideWatching = false
 
 local function shouldHide()
-    if next(hiders) then return true end
-
     local rules = Config.Hide
-    if rules.pauseMenu and IsPauseMenuActive() then return true end
-    if rules.hudHidden and IsHudHidden() then return true end
-    if rules.screenFaded and (IsScreenFadedOut() or IsScreenFadingOut()) then return true end
-    if rules.cinematic and IsCinematicCamRendering() then return true end
+    local paused = rules.pauseMenu and IsPauseMenuActive()
+    local other = next(hiders) ~= nil
+        or (rules.hudHidden and IsHudHidden())
+        or (rules.screenFaded and (IsScreenFadedOut() or IsScreenFadingOut()))
+        or (rules.cinematic and IsCinematicCamRendering())
 
-    return false
+    if other then return true, false end
+    if paused then return true, true end
+    return false, false
 end
 
 local function applyHidden()
-    local value = shouldHide()
-    if value == hidden then return end
-    hidden = value
-    SX.UI:Send('setHidden', { hidden = value })
-    TriggerEvent('sxHelpMenu:hiddenChanged', value)
+    local value, onlyPause = shouldHide()
+    if value == hidden and onlyPause == pauseOnly then return end
+    local changed = value ~= hidden
+    hidden, pauseOnly = value, onlyPause
+    SX.UI:Send('setHidden', { hidden = value, pauseOnly = onlyPause })
+    if changed then
+        TriggerEvent('sxHelpMenu:hiddenChanged', value)
+    end
 end
 
 local function watchHidden()

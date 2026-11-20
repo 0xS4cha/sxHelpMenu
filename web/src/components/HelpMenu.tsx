@@ -17,6 +17,7 @@ interface HelpMenuProps {
   focused: boolean
   glass: boolean
   keyLabel: string
+  hidden?: boolean
 }
 
 function enterOffset(position: Position): { x: number; y: number; scale: number } {
@@ -27,7 +28,7 @@ function enterOffset(position: Position): { x: number; y: number; scale: number 
   return { x: 0, y: 0, scale: 0.94 }
 }
 
-export function HelpMenu({ menu, direction, focused, glass, keyLabel }: HelpMenuProps) {
+export function HelpMenu({ menu, direction, focused, glass, keyLabel, hidden = false }: HelpMenuProps) {
   const body = useRef<HTMLDivElement>(null)
   useGlass(body, glass)
 
@@ -47,9 +48,9 @@ export function HelpMenu({ menu, direction, focused, glass, keyLabel }: HelpMenu
       className="font-help pointer-events-none select-none"
       style={{ width: menu.width, zoom: menu.scale }}
       initial={{ opacity: 0, ...enter }}
-      animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+      animate={{ opacity: hidden ? 0 : 1, x: 0, y: 0, scale: 1 }}
       exit={{ opacity: 0, ...enter }}
-      transition={{ duration: 0.3, ease: EASE }}
+      transition={{ duration: hidden ? 0.2 : 0.3, ease: EASE }}
     >
       {showTop && (
         <div className="mb-1.5 flex h-[24px] items-center justify-end gap-2.5 pr-0.5">
