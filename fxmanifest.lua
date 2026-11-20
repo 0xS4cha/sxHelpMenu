@@ -4,7 +4,7 @@ game 'gta5'
 name 'sxHelpMenu'
 description 'Library to show help menus and info widgets with pages, bars, sliders and a footer, anchored anywhere on screen'
 author '0xS4cha'
-version '1.3.0'
+version '1.4.0'
 repository 'https://github.com/0xS4cha/sxHelpMenu'
 
 lua54 'yes'
