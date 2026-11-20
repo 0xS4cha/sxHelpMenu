@@ -202,6 +202,25 @@ local function normalizeOffset(offset)
     }
 end
 
+local HIDE_RULES = { 'pauseMenu', 'hudHidden', 'screenFaded', 'cinematic' }
+
+local function normalizeHide(menu)
+    local hide = {}
+    for _, rule in ipairs(HIDE_RULES) do
+        hide[rule] = Config.Hide[rule] == true
+    end
+
+    if menu.pauseMenu == true then hide.pauseMenu = false end
+
+    if type(menu.hide) == 'table' then
+        for _, rule in ipairs(HIDE_RULES) do
+            if menu.hide[rule] ~= nil then hide[rule] = menu.hide[rule] == true end
+        end
+    end
+
+    return hide
+end
+
 local function normalizeMenu(menu)
     local position = menu.position or Config.Defaults.position
     if not validPositions[position] then
@@ -238,7 +257,7 @@ local function normalizeMenu(menu)
         pages = pages,
         key = key ~= false and key or nil,
         glass = glass,
-        pauseMenu = menu.pauseMenu == true,
+        hide = normalizeHide(menu),
     }
 end
 
@@ -247,3 +266,4 @@ SX.Normalize.Tone = normalizeTone
 SX.Normalize.ThresholdTone = thresholdTone
 SX.Normalize.Row = normalizeRow
 SX.Normalize.Menu = normalizeMenu
+SX.Normalize.HideRules = HIDE_RULES

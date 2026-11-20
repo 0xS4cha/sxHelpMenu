@@ -3,7 +3,8 @@ import { Anchor, type MenuState } from './components/Anchor'
 import { configureGlass } from './glass'
 import type { GlassSettings } from './glass/types'
 import { useNuiEvent } from './hooks/useNuiEvent'
-import { type MenuData, type RemoveMenuData, type SetFocusData, type SetPageData } from './types/menu'
+import { type HideRule, type MenuData, type RemoveMenuData, type SetFocusData, type SetPageData } from './types/menu'
+import { type HideState } from './utils/hide'
 import { groupOf, type AnchorGroup } from './utils/anchor'
 import { fetchNui } from './utils/fetchNui'
 import { isEnvBrowser } from './utils/nui'
@@ -20,7 +21,8 @@ interface KeyLabelData {
 
 interface HiddenData {
   hidden: boolean
-  pauseOnly?: boolean
+  requested?: boolean
+  conditions?: Partial<Record<HideRule, boolean>>
 }
 
 function withDeadlines(menu: MenuData): MenuData {
@@ -41,8 +43,7 @@ export default function App() {
   const [gap, setGap] = useState(1.2)
   const [glass, setGlass] = useState(false)
   const [keyLabel, setKeyLabel] = useState('R')
-  const [hidden, setHidden] = useState(false)
-  const [pauseOnly, setPauseOnly] = useState(false)
+  const [hideState, setHideState] = useState<HideState>({ requested: false, conditions: {} })
 
   useNuiEvent<MenuData>('setMenu', (payload) => {
     const menu = withDeadlines(payload)
@@ -85,8 +86,7 @@ export default function App() {
 
   useNuiEvent<KeyLabelData>('setKeyLabel', ({ label }) => setKeyLabel(label))
   useNuiEvent<HiddenData>('setHidden', (data) => {
-    setHidden(data.hidden)
-    setPauseOnly(data.pauseOnly === true)
+    setHideState({ requested: data.requested === true, conditions: data.conditions ?? {} })
   })
 
   useEffect(() => {
@@ -125,8 +125,7 @@ export default function App() {
           gap={gap}
           glass={glass}
           keyLabel={keyLabel}
-          hidden={hidden}
-          pauseOnly={pauseOnly}
+          hideState={hideState}
         />
       ))}
     </>

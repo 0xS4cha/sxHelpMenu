@@ -134,8 +134,13 @@ export interface MenuData {
   page: number
   order: number
   glass: boolean
-  pauseMenu?: boolean
+  hide?: HideRules
 }
+
+export type HideRule = 'pauseMenu' | 'hudHidden' | 'screenFaded' | 'cinematic'
+
+export type HideRules = Record<HideRule, boolean>
+
 
 export interface SetPageData {
   id: string
