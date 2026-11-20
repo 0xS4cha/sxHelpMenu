@@ -48,12 +48,22 @@ test('menu defaults', function()
     eq(result.scale, Config.Defaults.scale, 'scale')
     eq(result.glass, Config.Defaults.glass, 'glass')
     eq(result.key, true, 'key')
-    eq(result.pauseMenu, false, 'pauseMenu')
+    for _, rule in ipairs(N.HideRules) do
+        eq(result.hide[rule], Config.Hide[rule] == true, 'hide.' .. rule)
+    end
 end)
 
-test('pauseMenu is only enabled by true', function()
-    eq(N.Menu(menu({}, { pauseMenu = true })).pauseMenu, true, 'true')
-    eq(N.Menu(menu({}, { pauseMenu = 1 })).pauseMenu, false, 'number')
+test('hide overrides the global rules', function()
+    local result = N.Menu(menu({}, { hide = { pauseMenu = false, cinematic = true } }))
+    eq(result.hide.pauseMenu, false, 'pauseMenu')
+    eq(result.hide.cinematic, true, 'cinematic')
+    eq(result.hide.hudHidden, Config.Hide.hudHidden == true, 'hudHidden')
+end)
+
+test('pauseMenu = true is a shortcut for hide.pauseMenu = false', function()
+    eq(N.Menu(menu({}, { pauseMenu = true })).hide.pauseMenu, false, 'shortcut')
+    eq(N.Menu(menu({}, { pauseMenu = 1 })).hide.pauseMenu, Config.Hide.pauseMenu == true, 'number')
+    eq(N.Menu(menu({}, { pauseMenu = true, hide = { pauseMenu = true } })).hide.pauseMenu, true, 'hide wins')
 end)
 
 test('unknown position falls back to the default', function()

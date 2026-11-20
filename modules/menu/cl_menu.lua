@@ -142,29 +142,39 @@ end
 
 local hiders = {}
 local hidden = false
-local pauseOnly = false
+local hideState = nil
 local hideWatching = false
 
-local function shouldHide()
-    local rules = Config.Hide
-    local paused = rules.pauseMenu and IsPauseMenuActive()
-    local other = next(hiders) ~= nil
-        or (rules.hudHidden and IsHudHidden())
-        or (rules.screenFaded and (IsScreenFadedOut() or IsScreenFadingOut()))
-        or (rules.cinematic and IsCinematicCamRendering())
+local function readConditions()
+    return {
+        pauseMenu = IsPauseMenuActive() == true,
+        hudHidden = IsHudHidden() == true,
+        screenFaded = (IsScreenFadedOut() or IsScreenFadingOut()) == true,
+        cinematic = IsCinematicCamRendering() == true,
+    }
+end
 
-    if other then return true, false end
-    if paused then return true, true end
-    return false, false
+local function sameState(a, b)
+    if not a or not b or a.requested ~= b.requested then return false end
+    for _, rule in ipairs(SX.Normalize.HideRules) do
+        if a.conditions[rule] ~= b.conditions[rule] then return false end
+    end
+    return true
 end
 
 local function applyHidden()
-    local value, onlyPause = shouldHide()
-    if value == hidden and onlyPause == pauseOnly then return end
-    local changed = value ~= hidden
-    hidden, pauseOnly = value, onlyPause
-    SX.UI:Send('setHidden', { hidden = value, pauseOnly = onlyPause })
-    if changed then
+    local state = { requested = next(hiders) ~= nil, conditions = readConditions() }
+    if sameState(state, hideState) then return end
+    hideState = state
+
+    local value = state.requested
+    for _, rule in ipairs(SX.Normalize.HideRules) do
+        if state.conditions[rule] and Config.Hide[rule] then value = true end
+    end
+
+    SX.UI:Send('setHidden', { hidden = value, requested = state.requested, conditions = state.conditions })
+    if value ~= hidden then
+        hidden = value
         TriggerEvent('sxHelpMenu:hiddenChanged', value)
     end
 end

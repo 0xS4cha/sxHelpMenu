@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'motion/react'
 import type { MenuData } from '../types/menu'
 import { anchorStyle, type AnchorGroup } from '../utils/anchor'
+import { isMenuHidden, type HideState } from '../utils/hide'
 import { HelpMenu } from './HelpMenu'
 
 export interface MenuState {
@@ -15,11 +16,10 @@ interface AnchorProps {
   gap: number
   glass: boolean
   keyLabel: string
-  hidden: boolean
-  pauseOnly: boolean
+  hideState: HideState
 }
 
-export function Anchor({ group, entries, focusedId, gap, glass, keyLabel, hidden, pauseOnly }: AnchorProps) {
+export function Anchor({ group, entries, focusedId, gap, glass, keyLabel, hideState }: AnchorProps) {
   const sorted = [...entries].sort((a, b) => a.menu.order - b.menu.order)
 
   return (
@@ -33,7 +33,7 @@ export function Anchor({ group, entries, focusedId, gap, glass, keyLabel, hidden
             focused={menu.id === focusedId}
             glass={glass && menu.glass}
             keyLabel={keyLabel}
-            hidden={hidden && !(pauseOnly && menu.pauseMenu)}
+            hidden={isMenuHidden(menu.hide, hideState)}
           />
         ))}
       </AnimatePresence>
