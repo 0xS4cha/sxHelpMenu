@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import { useCallback, useEffect, useState } from 'react'
 import { Anchor, type MenuState } from './components/Anchor'
 import { configureGlass } from './glass'
@@ -21,6 +20,7 @@ interface KeyLabelData {
 
 interface HiddenData {
   hidden: boolean
+  pauseOnly?: boolean
 }
 
 function withDeadlines(menu: MenuData): MenuData {
@@ -42,6 +42,7 @@ export default function App() {
   const [glass, setGlass] = useState(false)
   const [keyLabel, setKeyLabel] = useState('R')
   const [hidden, setHidden] = useState(false)
+  const [pauseOnly, setPauseOnly] = useState(false)
 
   useNuiEvent<MenuData>('setMenu', (payload) => {
     const menu = withDeadlines(payload)
@@ -83,7 +84,10 @@ export default function App() {
   })
 
   useNuiEvent<KeyLabelData>('setKeyLabel', ({ label }) => setKeyLabel(label))
-  useNuiEvent<HiddenData>('setHidden', (data) => setHidden(data.hidden))
+  useNuiEvent<HiddenData>('setHidden', (data) => {
+    setHidden(data.hidden)
+    setPauseOnly(data.pauseOnly === true)
+  })
 
   useEffect(() => {
     void fetchNui('nuiReady', { ok: true })
@@ -111,7 +115,7 @@ export default function App() {
   const entries = Object.values(menus)
 
   return (
-    <motion.div initial={false} animate={{ opacity: hidden ? 0 : 1 }} transition={{ duration: 0.2 }}>
+    <>
       {Object.values(groups).map((group) => (
         <Anchor
           key={group.key}
@@ -121,8 +125,10 @@ export default function App() {
           gap={gap}
           glass={glass}
           keyLabel={keyLabel}
+          hidden={hidden}
+          pauseOnly={pauseOnly}
         />
       ))}
-    </motion.div>
+    </>
   )
 }

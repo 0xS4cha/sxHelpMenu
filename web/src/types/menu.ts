@@ -134,6 +134,7 @@ export interface MenuData {
   page: number
   order: number
   glass: boolean
+  pauseMenu?: boolean
 }
 
 export interface SetPageData {

@@ -48,6 +48,12 @@ test('menu defaults', function()
     eq(result.scale, Config.Defaults.scale, 'scale')
     eq(result.glass, Config.Defaults.glass, 'glass')
     eq(result.key, true, 'key')
+    eq(result.pauseMenu, false, 'pauseMenu')
+end)
+
+test('pauseMenu is only enabled by true', function()
+    eq(N.Menu(menu({}, { pauseMenu = true })).pauseMenu, true, 'true')
+    eq(N.Menu(menu({}, { pauseMenu = 1 })).pauseMenu, false, 'number')
 end)
 
 test('unknown position falls back to the default', function()
