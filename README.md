@@ -18,7 +18,7 @@ A FiveM library to show help menus and info widgets in the style of Grand Theft 
 - **Live updates**: update a row or the whole menu without replaying the opening animation.
 - **Auto hide**: a duration after which the menu hides itself.
 - **Per frame**: `ShowThisFrame` shows a menu while it is called every tick and hides it when the calls stop, like the native help texts.
-- **Global hide**: the menus fade out in the pause menu, when the HUD is hidden or the screen faded out, and when a resource asks for it with `SetHidden`.
+- **Global hide**: the menus fade out in the pause menu, when the HUD is hidden or the screen faded out, and when a resource asks for it with `SetHidden`. A menu with `pauseMenu = true` stays visible in the pause menu, for a card shown over the map.
 - **Cleanup**: the menus of a resource are hidden when it stops.
 - **Glass**: the rows are drawn over a blurred copy of the game, rendered with WebGL since the CSS `backdrop-filter` does not see the game in FiveM.
 - **Icons**: every [Lucide](https://lucide.dev/icons) icon by name (`gauge`, `car-front`…) or an image URL (`nui://my_resource/logo.png`).
@@ -195,6 +195,7 @@ end)
 | `key` | `true` | `true` shows the key bound by the player, a string shows this label instead, `false` hides it and ignores the key |
 | `duration` | | Milliseconds before the menu hides itself |
 | `order` | | Order of the menus on the same anchor, the lowest is the closest to the edge |
+| `pauseMenu` | `false` | Keeps the menu visible in the pause menu, for example over the map. The other hide rules still apply |
 
 ### Page
 
